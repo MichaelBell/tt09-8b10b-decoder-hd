@@ -11,7 +11,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 This project is designed to allow various tests of Tiny Tapeout timing, using the High Speed cell library.
 
-It includes two 16-bit shift registers and a 16x16 multiplier.
+It includes two 16-bit shift registers and a 12x12 multiplier.
 
 ## How it works
 
