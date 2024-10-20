@@ -1,9 +1,9 @@
 # Tiny Tapeout project information
 project:
-  title:        "HS multiplier"      # Project title
+  title:        "8b10b decoder and multiplier"      # Project title
   author:       "Mike Bell"      # Your name
   discord:      "rebelmike"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "Test for high speed cell library - shift registers and multiplier"      # One line description of what your project does
+  description:  "Test for high speed cell library - 8b10b decoder and multiplier"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
 
@@ -19,17 +19,18 @@ project:
   source_files:
     - "project.v"
     - "shift_reg.v"
+    - "decoder.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
   # Inputs
-  ui[0]: "A in"
-  ui[1]: "B in"
-  ui[2]: "Input gate"
-  ui[3]: "Input inverted gate"
-  ui[4]: "Gate select"
-  ui[5]: "Out select 1"
-  ui[6]: "Out select 2"
+  ui[0]: "A 8b10b in"
+  ui[1]: "B 8b10b in"
+  ui[2]: "Decoder status"
+  ui[3]: "Multiply result"
+  ui[4]: "Multiply result (update gated)"
+  ui[5]: "Decoded values (registered)"
+  ui[6]: "Decoded values (unregistered)"
   ui[7]: "Bidir output enable"
 
   # Outputs

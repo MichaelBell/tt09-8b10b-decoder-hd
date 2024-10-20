@@ -9,50 +9,23 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## What is it?
 
-This project is designed to allow various tests of Tiny Tapeout timing, using the High Speed cell library.
-
-It includes two 16-bit shift registers and a 13-bit x 13-bit multiplier.
+This project decodes incoming 8b10b encoded data and optionally multiplies the two decoded bytes.
 
 ## How it works
 
-### Input
+After reset, the 8b10b decoders look for the K.28.5 symbol `001111 1010` or `110000 0101`.  Once this sequence is detected the
+decoder indicates the stream is valid and then sets its input byte after each data symbol is received.
 
-On clock:
+If a K.28.5 symbol is received when the stream is valid, then the decoder remains in the valid state but does not update its output.
 
-- In 0 shifts into shift register A
-- In 1 shifts into shift register B
+If any symbol other than a data symbol or K.28.5 is received the decoder returns to the reset state until a new K.28.5
+symbol is sent.
 
-### Latch
-
-There are two 16-bit latches that are loaded from shift register.  These are the inputs to the multiplier.
-
-Inputs 2-4 control the latch:
-
-- In 4 selects whether in 2 or in 3 controls the latch gate
-- If in 4 is low, the latch gate is controlled by in 2
-- If in 4 is high, the latch gate is controlled by in 3, inverted.
-
-This setup may allow the difference between a short positive pulse and a short negative pulse through the TT mux to be explored.
-
-### Multiplier
-
-The latched inputs are multiplied to give a 26-bit result
-
-### Ouputs
-
-The bidir outputs and regular outputs form a 16-bit output, however in 7 controls the output enable for the bidir outputs (active high).
-
-Various outputs can be selected:
-
-- If rst_n is low, both the bidir and regular outputs are set to the inputs.
-- If in 5 is high, the outputs are set to the latched multiplier inputs, with the input selected by in 6.
-- If in 5 is low, the outputs are set to the multiplication result, with the top half selected when in 6 is high.
+The remaining inputs allow the decoded data, or the result of multiplying the decoded data to be presented on the outputs.
 
 ## How to test
 
-Clock in inputs, set the latch, see the results.
-
-Explore the timing using the other inputs.
+Send 8b10b encoded data streams, check the outputs.
 
 ## External hardware
 

@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024 Michael Bell
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 `default_nettype none
 
 // A shift register with delay gates for different cell libraries

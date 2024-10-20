@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Your Name
+ * Copyright (c) 2024 Michael Bell
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -19,49 +19,55 @@ module tt_um_MichaelBell_hs_mul (
   // Bidi output enable based on ui_in[7]
   assign uio_oe  = {{8{ui_in[7]}}};
 
-  // Shift registers for inputs
+  // Decoders for inputs
   /* verilator lint_off SYNCASYNCNET */
-  wire [15:0] sr_a;
-  shift_reg #(.WIDTH(16)) i_sr_a (
+  wire [7:0] val_a;
+  wire valid_a;
+  wire updated_a;
+  decoder i_decoder_a (
     .clk(clk),
+    .rst_n(rst_n),
+
     .data_in(ui_in[0]),
-    .data_out(sr_a)
+
+    .valid(valid_a),
+    .data_out(val_a),
+    .updated(updated_a)
   );
   
-  wire [15:0] sr_b;
-  shift_reg #(.WIDTH(16)) i_sr_b (
+  wire [7:0] val_b;
+  wire valid_b;
+  wire updated_b;
+  decoder i_decoder_b (
     .clk(clk),
+    .rst_n(rst_n),
+
     .data_in(ui_in[1]),
-    .data_out(sr_b)
+
+    .valid(valid_b),
+    .data_out(val_b),
+    .updated(updated_b)
   );
 
-  // Latch gate
-  wire latch_gate;
-  assign latch_gate = ui_in[4] ? !ui_in[3] : ui_in[2];
-
-  // Latched multiplier inputs
-  reg [15:0] mul_a;
-  always @(latch_gate or sr_a) begin
-    if (latch_gate) mul_a <= sr_a;
-  end
-  reg [15:0] mul_b;
-  always @(latch_gate or sr_b) begin
-    if (latch_gate) mul_b <= sr_b;
-  end
-  /* verilator lint_on SYNCASYNCNET */
-
   // Multiplier
-  wire [25:0] result;
-  assign result = mul_a[12:0] * mul_b[12:0];
+  wire [15:0] mul_result;
+  assign mul_result = val_a * val_b;
+
+  reg [15:0] result;
+  always @(posedge clk) begin
+    if (!rst_n) result <= 0;
+    else if (ui_in[3] || (ui_in[4] && updated_a && updated_b)) result <= mul_result;
+    else if (ui_in[5]) result <= {val_b, val_a};
+  end
 
   // Outputs
   assign uo_out = !rst_n ? ui_in :
-                  ui_in[5] ? (ui_in[6] ? mul_b[7:0] : mul_a[7:0]) :
-                  ui_in[6] ? result[23:16] :
+                  ui_in[2] ? {4'b0000, updated_b, valid_b, updated_a, valid_a} :
+                  ui_in[6] ? val_a :
                   result[7:0];
   assign uio_out = !rst_n ? ui_in :
-                  ui_in[5] ? (ui_in[6] ? mul_b[15:8] : mul_a[15:8]) :
-                  ui_in[6] ? {6'b000000, result[25:24]} :
+                  ui_in[2] ? 8'h00 :
+                  ui_in[6] ? val_b :
                   result[15:8];
 
   // List all unused inputs to prevent warnings
