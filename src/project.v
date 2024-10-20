@@ -17,7 +17,7 @@ module tt_um_MichaelBell_hs_mul (
 );
 
   // Bidi output enable based on ui_in[7]
-  assign uio_oe  = {{8{ui_in[7]}}};
+  assign uio_oe  = {{8{!rst_n || ui_in[7]}}};
 
   // Decoders for inputs
   /* verilator lint_off SYNCASYNCNET */
@@ -61,11 +61,11 @@ module tt_um_MichaelBell_hs_mul (
   end
 
   // Outputs
-  assign uo_out = !rst_n ? ui_in :
+  assign uo_out = !rst_n ? {~ui_in[3], ui_in[3], ~ui_in[2], ui_in[2], ~ui_in[1], ui_in[1], ~ui_in[0], ui_in[0]} :
                   ui_in[2] ? {4'b0000, updated_b, valid_b, updated_a, valid_a} :
                   ui_in[6] ? val_a :
                   result[7:0];
-  assign uio_out = !rst_n ? ui_in :
+  assign uio_out = !rst_n ? {~ui_in[7], ui_in[7], ~ui_in[6], ui_in[6], ~ui_in[5], ui_in[5], ~ui_in[4], ui_in[4]} :
                   ui_in[2] ? 8'h00 :
                   ui_in[6] ? val_b :
                   result[15:8];

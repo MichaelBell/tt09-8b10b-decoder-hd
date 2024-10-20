@@ -190,7 +190,7 @@ module decoder (
                     data_out <= {decoded_4b, decoded_6b};
                     count <= 0;
                     updated <= 1;
-                end else if (!is_sync) begin
+                end else if (is_sync) begin
                     count <= 0;
                 end else begin
                     valid <= 0;
