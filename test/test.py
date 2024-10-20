@@ -162,9 +162,9 @@ async def test_sync(dut):
 
     for i in range(100):
         await ClockCycles(dut.clk, random.randint(10,20))
-        await Timer(1, "ns")
+        await Timer(2, "ns")
         assert dut.uo_out.value == 0
         await sync_streams(dut)
         await ClockCycles(dut.clk, 1)
-        await Timer(1, "ns")
+        await Timer(2, "ns")
         assert dut.uo_out.value == 5

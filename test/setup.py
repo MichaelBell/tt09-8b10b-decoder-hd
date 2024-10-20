@@ -8,5 +8,5 @@ if "PDK_ROOT" in os.environ:
         os.environ["PDK_ROOT"],
         {"sky130A": "sky130"}[os.environ["PDK"]],
         PDK_VERSION,
-        include_libraries=["sky130_fd_sc_hs",]
+        include_libraries=["sky130_fd_sc_hd",]
     )
