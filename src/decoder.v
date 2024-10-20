@@ -34,6 +34,7 @@ module decoder (
     localparam [5:0] D_5 = 6'b101001;
     localparam [5:0] D_6 = 6'b011001;
     localparam [5:0] D_7 = 6'b111000;
+    localparam [5:0] D_7n = 6'b000111;
 
     localparam [5:0] D_8 = 6'b111001;
     localparam [5:0] D_9 = 6'b100101;
@@ -66,6 +67,7 @@ module decoder (
     localparam [3:0] D_x_1 = 4'b1001;
     localparam [3:0] D_x_2 = 4'b0101;
     localparam [3:0] D_x_3 = 4'b1100;
+    localparam [3:0] D_x_3n = 4'b0011;
     localparam [3:0] D_x_4 = 4'b1101;
     localparam [3:0] D_x_5 = 4'b1010;
     localparam [3:0] D_x_6 = 4'b0110;
@@ -109,6 +111,7 @@ module decoder (
             D_5: decoded_6b = 5'd5;
             D_6: decoded_6b = 5'd6;
             D_7: decoded_6b = 5'd7;
+            D_7n: decoded_6b = 5'd7;
 
             D_8: decoded_6b = 5'd8;
             D_9: decoded_6b = 5'd9;
@@ -149,6 +152,7 @@ module decoder (
             D_x_1: decoded_4b = 3'd1;
             D_x_2: decoded_4b = 3'd2;
             D_x_3: decoded_4b = 3'd3;
+            D_x_3n: decoded_4b = 3'd3;
             D_x_4: decoded_4b = 3'd4;
             D_x_5: decoded_4b = 3'd5;
             D_x_6: decoded_4b = 3'd6;
@@ -181,7 +185,7 @@ module decoder (
             updated <= 0;
             count <= next_count;
 
-            if (count == 4'd10) begin
+            if (count == 4'd9) begin
                 if (decoded_valid) begin
                     data_out <= {decoded_4b, decoded_6b};
                     count <= 0;
